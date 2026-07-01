@@ -139,6 +139,110 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
+/* ---------- energy ticker ---------- */
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 30s linear infinite;
+}
+
+/* ---------- pouring can ---------- */
+@keyframes pour-wobble {
+  0%,
+  100% {
+    transform: rotate(112deg);
+  }
+  50% {
+    transform: rotate(118deg);
+  }
+}
+
+.pour-can {
+  animation: pour-wobble 6s ease-in-out infinite;
+}
+
+@keyframes stream-flow {
+  from {
+    background-position-y: 0;
+  }
+  to {
+    background-position-y: 36px;
+  }
+}
+
+.pour-stream {
+  background: linear-gradient(
+    180deg,
+    rgba(244, 248, 255, 0.95),
+    rgba(169, 246, 255, 0.85) 30%,
+    rgba(82, 215, 255, 0.75)
+  );
+  box-shadow:
+    0 0 18px rgba(82, 215, 255, 0.8),
+    0 0 50px rgba(82, 215, 255, 0.4);
+}
+
+.pour-stream::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0 5px,
+    transparent 5px 18px
+  );
+  animation: stream-flow 0.45s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes pour-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.35);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
+  }
+}
+
+.pour-ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1.5px solid rgba(169, 246, 255, 0.65);
+  border-radius: 9999px;
+  animation: pour-ripple 2.4s ease-out infinite;
+}
+
+/* ---------- liquid meter waves ---------- */
+@keyframes wave-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-240px);
+  }
+}
+
+.wave-a {
+  animation: wave-slide 3.4s linear infinite;
+}
+
+.wave-b {
+  animation: wave-slide 5.6s linear infinite reverse;
+}
+
 /* ---------- floating capsule ---------- */
 @keyframes capsule-float {
   0%,

@@ -31,37 +31,53 @@ export default function Hero({ onCalculate, onDemo }: HeroProps) {
         </svg>
       </div>
 
-      {/* floating energy capsule */}
+      {/* pouring energy can */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
-        className="capsule-float relative mb-10"
+        className="relative mb-6 h-64 w-60 max-md:scale-90"
       >
+        {/* tilted can, wobbling around its mouth */}
         <div
-          className="relative h-44 w-20 rounded-[2.5rem] md:h-52 md:w-24"
+          className="pour-can absolute top-2 left-[118px] h-24 w-11 rounded-2xl"
           style={{
+            transformOrigin: "22px 10px",
             background:
               "linear-gradient(155deg, #ffffff 0%, #e8f1fa 18%, #c8d3df 38%, #7c8a9a 50%, #dfeaf5 64%, #a9f6ff 88%, #52d7ff 100%)",
             boxShadow:
-              "0 0 60px rgba(82,215,255,0.55), 0 0 140px rgba(82,215,255,0.25), inset 0 0 24px rgba(255,255,255,0.5)",
+              "0 0 45px rgba(82,215,255,0.55), 0 0 110px rgba(82,215,255,0.25), inset 0 0 18px rgba(255,255,255,0.5)",
           }}
         >
+          {/* can mouth */}
+          <div className="absolute -top-0.5 left-1/2 h-2 w-7 -translate-x-1/2 rounded-full bg-gradient-to-r from-chrome via-frost to-chrome" />
           {/* chrome highlight strip */}
-          <div className="absolute top-3 bottom-3 left-2.5 w-2 rounded-full bg-gradient-to-b from-white via-white/40 to-transparent" />
+          <div className="absolute top-2 bottom-2 left-1.5 w-1.5 rounded-full bg-gradient-to-b from-white via-white/40 to-transparent" />
           {/* lightning glyph */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <svg width="34" height="52" viewBox="0 0 34 52" fill="none">
-              <path
-                d="M20 2 6 30h9l-3 20L28 20h-9l1-18z"
-                fill="#05070A"
-                opacity="0.85"
-              />
+            <svg width="18" height="28" viewBox="0 0 34 52" fill="none">
+              <path d="M20 2 6 30h9l-3 20L28 20h-9l1-18z" fill="#05070A" opacity="0.85" />
             </svg>
           </div>
         </div>
-        {/* reflection glow under the can */}
-        <div className="absolute -bottom-8 left-1/2 h-6 w-32 -translate-x-1/2 rounded-full bg-electric/30 blur-xl" />
+
+        {/* glowing stream */}
+        <div className="pour-stream absolute top-[26px] bottom-[30px] left-[128px] w-2 rounded-full" />
+
+        {/* pool + ripples */}
+        <div className="absolute bottom-2 left-[132px] -translate-x-1/2">
+          <div
+            className="h-6 w-40 rounded-[100%] blur-[2px]"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(169,246,255,0.85), rgba(82,215,255,0.4) 55%, transparent 75%)",
+              boxShadow: "0 0 40px rgba(82,215,255,0.7), 0 0 90px rgba(82,215,255,0.35)",
+            }}
+          />
+          <div className="pour-ripple h-8 w-24" style={{ animationDelay: "0s" }} />
+          <div className="pour-ripple h-8 w-24" style={{ animationDelay: "0.8s" }} />
+          <div className="pour-ripple h-8 w-24" style={{ animationDelay: "1.6s" }} />
+        </div>
       </motion.div>
 
       <motion.p

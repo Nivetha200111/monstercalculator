@@ -5,6 +5,7 @@ import type { CaffeineInput, CaffeineRecommendation } from "@/types/caffeine";
 import { calculateCaffeineRoi } from "@/lib/caffeineCalculator";
 import { defaultInput, demoInput } from "@/lib/sampleData";
 import AuraBackground from "@/components/AuraBackground";
+import EnergyTicker from "@/components/EnergyTicker";
 import Hero from "@/components/Hero";
 import InputConsole from "@/components/InputConsole";
 import ResultDashboard from "@/components/ResultDashboard";
@@ -14,6 +15,7 @@ export default function Home() {
   const [input, setInput] = useState<CaffeineInput>(defaultInput);
   const [result, setResult] = useState<CaffeineRecommendation | null>(null);
   const [resultInput, setResultInput] = useState<CaffeineInput>(defaultInput);
+  const [runId, setRunId] = useState(0);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const scrollToConsole = () =>
@@ -22,6 +24,8 @@ export default function Home() {
   const runCalculation = (source: CaffeineInput) => {
     setResult(calculateCaffeineRoi(source));
     setResultInput(source);
+    setRunId((n) => n + 1); // remounts the dashboard so the slam replays
+
     // let the dashboard mount before scrolling to it
     requestAnimationFrame(() =>
       setTimeout(
@@ -41,6 +45,8 @@ export default function Home() {
       <AuraBackground />
 
       <Hero onCalculate={scrollToConsole} onDemo={runDemo} />
+
+      <EnergyTicker result={result} />
 
       {/* product explanation strip */}
       <section className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-4 px-6 py-6 sm:grid-cols-3">
@@ -78,7 +84,7 @@ export default function Home() {
       <div ref={resultsRef}>
         {result && (
           <>
-            <ResultDashboard input={resultInput} result={result} />
+            <ResultDashboard key={runId} input={resultInput} result={result} />
             <ShareCard result={result} />
           </>
         )}

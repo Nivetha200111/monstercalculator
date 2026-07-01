@@ -14,11 +14,23 @@ function scoreColor(score: number): string {
   return "#FF4D8D";
 }
 
+// Sine-ish wave, 480 wide (2x the liquid circle) so it can slide seamlessly.
+const WAVE_PATH = (() => {
+  let d = "M0 0 Q15 -8 30 0";
+  for (let x = 60; x <= 480; x += 30) d += ` T${x} 0`;
+  return `${d} L480 320 L0 320 Z`;
+})();
+
+// Liquid circle: center (120,120), r=76 → spans y 44..196.
+const LIQUID_TOP = 44;
+const LIQUID_BOTTOM = 196;
+
 export default function RoiMeter({ score, size = 240 }: RoiMeterProps) {
   const radius = 100;
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;
   const color = scoreColor(score);
+  const fillY = LIQUID_BOTTOM - (score / 100) * (LIQUID_BOTTOM - LIQUID_TOP);
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -36,6 +48,9 @@ export default function RoiMeter({ score, size = 240 }: RoiMeterProps) {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <clipPath id="liquidClip">
+            <circle cx="120" cy="120" r="76" />
+          </clipPath>
         </defs>
         {/* track */}
         <circle
@@ -81,18 +96,42 @@ export default function RoiMeter({ score, size = 240 }: RoiMeterProps) {
           transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
         />
       </svg>
+
+      {/* liquid fill — separate upright svg so waves aren't rotated */}
+      <svg viewBox="0 0 240 240" width={size} height={size} className="absolute inset-0">
+        <circle cx="120" cy="120" r="76" fill="rgba(5,7,10,0.55)" />
+        <g clipPath="url(#liquidClip)">
+          <motion.g
+            initial={{ y: LIQUID_BOTTOM + 20 }}
+            animate={{ y: fillY }}
+            transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          >
+            <g className="wave-b">
+              <path d={WAVE_PATH} fill={color} opacity="0.28" transform="translate(0,-6)" />
+            </g>
+            <g className="wave-a">
+              <path d={WAVE_PATH} fill={color} opacity="0.5" />
+            </g>
+          </motion.g>
+        </g>
+        <circle cx="120" cy="120" r="76" fill="none" stroke="rgba(169,246,255,0.15)" />
+      </svg>
+
       {/* center readout */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.span
           initial={{ opacity: 0, scale: 0.6 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.7 }}
-          className="font-display text-6xl font-bold tabular-nums"
-          style={{ color, textShadow: `0 0 30px ${color}66` }}
+          className="font-display text-6xl font-bold text-frost tabular-nums"
+          style={{ textShadow: `0 0 30px ${color}aa, 0 2px 14px rgba(5,7,10,0.8)` }}
         >
           {score}
         </motion.span>
-        <span className="mt-1 text-[10px] font-medium tracking-[0.3em] text-muted uppercase">
+        <span
+          className="mt-1 text-[10px] font-medium tracking-[0.3em] uppercase"
+          style={{ color: "#C8D3DF", textShadow: "0 1px 8px rgba(5,7,10,0.9)" }}
+        >
           Caffeine ROI
         </span>
       </div>
